@@ -4,3 +4,46 @@
   tasks:
     - include_role:
         name: mft
+
+    - name: Set authorized keys for root
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', 'keys/id_rsa.pub') }}"
+
+    - name: Install packages
+      package:
+        name:
+          - tmux
+          - infiniband-diags
+        state: present
+
+    - name: Download firmware
+      shell: |
+        cd /root
+        curl -L -O http://www.mellanox.com/downloads/firmware/fw-ConnectX6-rel-20_28_2006-MCX653106A-ECA_Ax-UEFI-14.21.17-FlexBoot-3.6.102.bin.zip
+        unzip fw-ConnectX6-rel-20_28_2006-MCX653106A-ECA_Ax-UEFI-14.21.17-FlexBoot-3.6.102.bin.zip
+        rm -f fw-ConnectX6-rel-20_28_2006-MCX653106A-ECA_Ax-UEFI-14.21.17-FlexBoot-3.6.102.bin.zip
+      args:
+        creates: /root/fw-ConnectX6-rel-20_28_2006-MCX653106A-ECA_Ax-UEFI-14.21.17-FlexBoot-3.6.102.bin
+
+    - name: Disable ironic-python-agent
+      systemd:
+        name: ironic-python-agent
+        enabled: false
+
+    - name: Copy update script
+      copy:
+        src: files/mlnx-update.sh
+        dest: /opt/mlnx-update.sh
+        mode: 0777
+
+    - name: Copy service file
+      copy:
+        src: files/mlnx.service
+        dest: /etc/systemd/system/mlnx.service
+
+    - name: Enable service
+      systemd:
+        name: mlnx.service
+        enabled: true

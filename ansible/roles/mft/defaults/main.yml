@@ -15,3 +15,4 @@ sriov_os_pkgs:
   # output of uname -r, but the packages aren't always available.
   - kernel-devel
   - make
+  - elfutils-libelf-devel

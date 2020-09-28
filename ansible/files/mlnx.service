@@ -1,0 +1,7 @@
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/mlnx-update.sh
+
+[Install]
+WantedBy=multi-user.target
