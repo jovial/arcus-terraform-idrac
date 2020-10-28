@@ -47,3 +47,9 @@
       systemd:
         name: mlnx.service
         enabled: true
+
+    - name: Clean cache
+      command: dnf clean all
+      args:
+        warn: false
+
