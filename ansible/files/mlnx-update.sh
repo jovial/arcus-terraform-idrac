@@ -21,7 +21,6 @@ for dev in /dev/mst/mt4123_pciconf[^.]; do
     export NEED_REBOOT=1
   }
 done
-
 if [ $NEED_REBOOT -eq 1 ]; then
   reboot
 else
